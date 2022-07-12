@@ -1,15 +1,29 @@
-import { IsObject, IsString } from 'class-validator';
+import { IsEnum, IsObject, IsString, Validate } from 'class-validator';
+import { ContentValidator } from '../validators/content.validator';
 
+export const MetricTypes = ['page_view', 'event', 'click', 'purchase'];
 export class CreateMetricDto {
+  @IsString()
+  @IsEnum(MetricTypes)
+  type: string;
+
   @IsString()
   name: string;
 
-  @IsObject()
+  @Validate(ContentValidator)
   content: object;
 
   @IsObject()
   user: {
-    id: string;
+    uuid: string;
     ip: string;
+    anonymousId: string;
+  };
+
+  @IsObject()
+  host: {
+    hostname: string;
+    browser: string;
+    device: string;
   };
 }

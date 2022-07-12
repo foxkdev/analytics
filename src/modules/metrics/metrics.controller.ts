@@ -1,4 +1,10 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Headers,
+  Post,
+  UnauthorizedException,
+} from '@nestjs/common';
 import {
   Ctx,
   EventPattern,
@@ -14,12 +20,18 @@ export class MetricsController {
   constructor(private readonly metricsService: MetricsService) {}
 
   @Post()
-  async createMetric(@Body() metric: CreateMetricDto) {
-    return this.metricsService.saveMetric(metric);
+  async createMetric(
+    @Body() metric: CreateMetricDto,
+    @Headers('x-token') projectId: string,
+  ) {
+    if (!projectId) {
+      throw new UnauthorizedException('project not valid');
+    }
+    return this.metricsService.addMetric({ ...metric, projectId });
   }
 
-  @EventPattern('save-metric')
+  @EventPattern('add-metric')
   async onMetric(@Payload() payload) {
-    console.log('EVENT', payload);
+    return this.metricsService.saveMetric(payload);
   }
 }

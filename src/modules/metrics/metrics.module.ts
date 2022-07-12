@@ -1,33 +1,38 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
+import { MongooseModule } from '@nestjs/mongoose';
 import { MetricsController } from './metrics.controller';
+import { MetricsRepository } from './metrics.repository';
 import { MetricsService } from './metrics.service';
+import { Metric, MetricSchema } from './schemas/metric.schema';
 
 @Module({
-  imports: [],
+  imports: [
+    MongooseModule.forFeature([{ name: Metric.name, schema: MetricSchema }]),
+  ],
   controllers: [MetricsController],
   providers: [
     MetricsService,
+    MetricsRepository,
     {
       provide: 'EVENTS_SERVICE',
-      useFactory: () => {
-        // const user = configService.get('RABBITMQ_USER');
-        // const password = configService.get('RABBITMQ_PASSWORD');
-        // const host = configService.get('RABBITMQ_HOST');
-        // const queueName = configService.get('RABBITMQ_QUEUE_NAME');
+      useFactory: (configService: ConfigService) => {
+        const uri = configService.get('rabbitmq.uri');
+        const queue = configService.get('rabbitmq.queue');
 
         return ClientProxyFactory.create({
           transport: Transport.RMQ,
           options: {
-            urls: [`amqp://admin:admin@localhost:5672`],
-            queue: 'metrics',
+            urls: [uri],
+            queue,
             queueOptions: {
               durable: false,
             },
           },
         });
       },
-      inject: [],
+      inject: [ConfigService],
     },
   ],
 })
