@@ -76,7 +76,7 @@ export class MetricsRepository {
         },
       },
     ]);
-    return totals[0]['total'];
+    return totals[0] ? totals[0]['total'] : 0;
   }
 
   async getTotalUsers(projectId: string) {
@@ -99,6 +99,6 @@ export class MetricsRepository {
         $count: 'total',
       },
     ]);
-    return totals[0]['total'];
+    return totals[0] ? totals[0]['total'] : 0;
   }
 }
