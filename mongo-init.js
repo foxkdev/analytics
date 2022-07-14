@@ -10,3 +10,4 @@ db.createUser({
 });
 
 db.createCollection('metrics');
+db.createCollection('projects');

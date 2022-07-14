@@ -14,16 +14,11 @@ export class CreateMetricDto {
   content: object;
 
   @IsObject()
-  user: {
-    uuid: string;
-    ip: string;
-    anonymousId: string;
-  };
+  user: any;
 
   @IsObject()
-  host: {
-    hostname: string;
-    browser: string;
-    device: string;
-  };
+  host: any;
+
+  @IsObject()
+  properties: any;
 }

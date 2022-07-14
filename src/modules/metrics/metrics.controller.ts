@@ -12,22 +12,31 @@ import {
   Payload,
   RmqContext,
 } from '@nestjs/microservices';
+import { Ip } from '../decorators/ip.decorator';
+import { Project } from '../project/decorators/project.decorator';
+import { ProjectsService } from '../project/projects.service';
 import { CreateMetricDto } from './dto/create-metric-dto';
 import { MetricsService } from './metrics.service';
 
 @Controller('metrics')
 export class MetricsController {
-  constructor(private readonly metricsService: MetricsService) {}
+  constructor(
+    private readonly metricsService: MetricsService,
+    private readonly projectsService: ProjectsService,
+  ) {}
 
   @Post()
   async createMetric(
     @Body() metric: CreateMetricDto,
-    @Headers('x-token') projectId: string,
+    @Project() projectToken: string,
+    @Ip() ip: string,
   ) {
-    if (!projectId) {
-      throw new UnauthorizedException('project not valid');
+    const project = await this.projectsService.getByToken(projectToken);
+    if (!project) {
+      throw new UnauthorizedException();
     }
-    return this.metricsService.addMetric({ ...metric, projectId });
+    metric.user.ip = ip;
+    return this.metricsService.addMetric({ ...metric, projectId: project._id });
   }
 
   @EventPattern('add-metric')

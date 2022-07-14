@@ -22,6 +22,7 @@ export class MetricsService {
       content: metric.content,
       user: metric.user,
       host: metric.host || {},
+      properties: metric.properties || {},
       projectId: metric.projectId,
       createdAt: new Date(),
     });

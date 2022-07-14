@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ProjectsModule } from '../project/projects.module';
 import { MetricsController } from './metrics.controller';
 import { MetricsRepository } from './metrics.repository';
 import { MetricsService } from './metrics.service';
@@ -10,6 +11,7 @@ import { Metric, MetricSchema } from './schemas/metric.schema';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Metric.name, schema: MetricSchema }]),
+    ProjectsModule,
   ],
   controllers: [MetricsController],
   providers: [
@@ -35,5 +37,6 @@ import { Metric, MetricSchema } from './schemas/metric.schema';
       inject: [ConfigService],
     },
   ],
+  exports: [MetricsService],
 })
 export class MetricsModule {}

@@ -23,7 +23,10 @@ export class Metric {
   @Prop({ required: true, type: Object })
   host: object;
 
-  @Prop({ required: true })
+  @Prop({ required: true, type: Object })
+  properties: object;
+
+  @Prop({ required: true, ref: 'Project' })
   projectId: string;
 
   @Prop({ required: true })

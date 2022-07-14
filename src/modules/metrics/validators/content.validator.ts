@@ -11,6 +11,9 @@ export class ContentValidator implements ValidatorConstraintInterface {
     value: any,
     validationArguments?: ValidationArguments,
   ): boolean | Promise<boolean> {
+    if (!validationArguments.object['type']) {
+      return false;
+    }
     const fields = contentFields[validationArguments.object['type']];
     if (fields.length === 0) {
       return true;

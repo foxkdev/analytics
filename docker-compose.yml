@@ -20,7 +20,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password
-      MONGO_INITDB_DATABASE: analytics  
+      MONGO_INITDB_DATABASE: analytics_dev
     networks:
       - foxkdev
     volumes:

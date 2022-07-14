@@ -1,5 +1,5 @@
 export const contentFields = {
-  page_view: ['value', 'path'],
+  page_view: ['value'],
   event: [],
   click: [],
   purchase: [],
